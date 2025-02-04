@@ -11,7 +11,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Duke extends Application {
+public class Main extends Application {
     private ScrollPane scrollPane;
     private VBox dialogContainer;
     private TextField userInput;
@@ -25,6 +25,7 @@ public class Duke extends Application {
             Objects.requireNonNull(
                     this.getClass().getResourceAsStream(
                             "/images/DaDuke.png")));
+    private Duke duke = new Duke();
 
     @Override
     public void start(Stage stage) {
@@ -98,8 +99,11 @@ public class Duke extends Application {
      * user input after processing.
      */
     private void handleUserInput() {
+        String userText = this.userInput.getText();
+        String dukeText = duke.getResponse(userText);
         this.dialogContainer.getChildren().addAll(
-                new DialogBox(this.userInput.getText(), this.userImage));
+                new DialogBox(userText, this.userImage),
+                new DialogBox(dukeText, this.dukeImage));
         this.userInput.clear();
     }
 }
