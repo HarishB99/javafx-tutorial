@@ -36,9 +36,6 @@ public class Duke extends Application {
         this.userInput = new TextField();
         this.sendButton = new Button("Send");
 
-        DialogBox dialogBox = new DialogBox("Hello!", this.userImage);
-        this.dialogContainer.getChildren().addAll(dialogBox);
-
         AnchorPane mainLayout = new AnchorPane();
         mainLayout.getChildren().addAll(
                 this.scrollPane, this.userInput, this.sendButton);
@@ -76,6 +73,33 @@ public class Duke extends Application {
         AnchorPane.setLeftAnchor(this.userInput, 1.0);
         AnchorPane.setBottomAnchor(this.userInput, 1.0);
 
+        // Handling user input
+        this.sendButton.setOnMouseClicked(event -> {
+            handleUserInput();
+        });
+
+        this.userInput.setOnAction(event -> {
+            handleUserInput();
+        });
+
+        // Scroll down to the end every time
+        // dialogContainer's height changes.
+        this.dialogContainer.heightProperty()
+                .addListener(observable -> {
+                    this.scrollPane.setVvalue(1.0);
+                });
+
         // More code to be added here later
+    }
+
+    /**
+     * Creates a dialog box containing user input, and
+     * appends it to the dialog container. Clears the
+     * user input after processing.
+     */
+    private void handleUserInput() {
+        this.dialogContainer.getChildren().addAll(
+                new DialogBox(this.userInput.getText(), this.userImage));
+        this.userInput.clear();
     }
 }
