@@ -1,5 +1,9 @@
+import java.io.IOException;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -8,21 +12,25 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
 public class DialogBox extends HBox {
-    private Label text;
+    @FXML
+    private Label dialog;
+    @FXML
     private ImageView displayPicture;
 
-    private DialogBox(String s, Image i) {
-        this.text = new Label(s);
-        this.displayPicture = new ImageView(i);
+    private DialogBox(String text, Image img) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(
+                    MainWindow.class.getResource(
+                            "/view/DialogBox.fxml"));
+            fxmlLoader.setController(this);
+            fxmlLoader.setRoot(this);
+            fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        // Styling the dialog box
-        this.text.setWrapText(true);
-        this.displayPicture.setFitWidth(100.0);
-        this.displayPicture.setFitHeight(100.0);
-        this.setAlignment(Pos.TOP_RIGHT);
-
-        this.getChildren().addAll(
-                this.text, this.displayPicture);
+        this.dialog.setText(text);
+        this.displayPicture.setImage(img);
     }
 
     /**
@@ -30,19 +38,19 @@ public class DialogBox extends HBox {
      * ImageView is on the left and text is on the right
      */
     private void flip() {
-        this.setAlignment(Pos.TOP_LEFT);
         ObservableList<Node> nodes = FXCollections.observableArrayList(
                 this.getChildren());
         FXCollections.reverse(nodes);
         this.getChildren().setAll(nodes);
+        this.setAlignment(Pos.TOP_LEFT);
     }
 
-    public static DialogBox getUserDialog(String s, Image i) {
-        return new DialogBox(s, i);
+    public static DialogBox getUserDialog(String text, Image img) {
+        return new DialogBox(text, img);
     }
 
-    public static DialogBox getDukeDialog(String s, Image i) {
-        DialogBox db = new DialogBox(s, i);
+    public static DialogBox getDukeDialog(String text, Image img) {
+        DialogBox db = new DialogBox(text, img);
         db.flip();
         return db;
     }
